@@ -25,11 +25,11 @@ jenkins_install:
     - enable: True
     - watch:
       {% if grains['os_family'] in ['RedHat', 'Debian'] %}
-      - file: jenkins config
+      - file: jenkins_config
       {% endif %}
 
 {% if grains['os_family'] in ['RedHat', 'Debian'] %}
-jenkins config:
+jenkins_config:
   file.managed:
     {% if grains['os_family'] == 'RedHat' %}
     - name: /etc/sysconfig/jenkins
@@ -42,6 +42,4 @@ jenkins config:
     - user: root
     - group: root
     - mode: 400
-    - require:
-      - sls: jenkins_install
 {% endif %}
