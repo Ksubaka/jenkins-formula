@@ -1,6 +1,30 @@
 {% from "jenkins/map.jinja" import jenkins with context %}
 
-jenkins_install:
+jenkins_group:
+  group.present:
+    - name: {{ jenkins.group }}
+    - system: True
+
+jenkins_user:
+  file.directory:
+    - name: {{ jenkins.home }}
+    - user: {{ jenkins.user }}
+    - group: {{ jenkins.group }}
+    - mode: 0755
+    - require:
+      - user: jenkins_user
+      - group: jenkins_group
+  user.present:
+    - name: {{ jenkins.user }}
+    - groups:
+      - {{ jenkins.group }}
+    - system: True
+    - home: {{ jenkins.home }}
+    - shell: /bin/bash
+    - require:
+      - group: jenkins_group
+
+jenkins:
   {% if grains['os_family'] in ['RedHat', 'Debian'] %}
     {% set repo_suffix = '' %}
     {% if jenkins.stable %}
@@ -17,14 +41,14 @@ jenkins_install:
     - key_url: http://pkg.jenkins-ci.org/debian{{ repo_suffix }}/jenkins-ci.org.key
     {% endif %}
     - require_in:
-      - pkg: jenkins_install
+      - pkg: jenkins
   {% endif %}
   pkg.installed:
     - pkgs: {{ jenkins.pkgs|json }}
   service.running:
     - enable: True
     - watch:
-      - pkg: jenkins_install
+      - pkg: jenkins
       {% if grains['os_family'] in ['RedHat', 'Debian'] %}
       - file: jenkins config
       {% endif %}
@@ -44,5 +68,5 @@ jenkins config:
     - group: root
     - mode: 400
     - require:
-      - pkg: jenkins_install
+      - pkg: jenkins
 {% endif %}
