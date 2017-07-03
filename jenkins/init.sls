@@ -24,7 +24,6 @@ jenkins_install:
   service.running:
     - enable: True
     - watch:
-      - pkg: jenkins
       {% if grains['os_family'] in ['RedHat', 'Debian'] %}
       - file: jenkins config
       {% endif %}
@@ -44,5 +43,5 @@ jenkins config:
     - group: root
     - mode: 400
     - require:
-      - pkg: jenkins
+      - sls: jenkins_install
 {% endif %}
