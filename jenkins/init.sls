@@ -17,14 +17,14 @@ jenkins_install:
     - key_url: http://pkg.jenkins-ci.org/debian{{ repo_suffix }}/jenkins-ci.org.key
     {% endif %}
     - require_in:
-      - pkg: jenkins
+      - pkg: jenkins_install
   {% endif %}
   pkg.installed:
     - pkgs: {{ jenkins.pkgs|json }}
   service.running:
     - enable: True
     - watch:
-      - pkg: jenkins
+      - pkg: jenkins_install
       {% if grains['os_family'] in ['RedHat', 'Debian'] %}
       - file: jenkins config
       {% endif %}
@@ -44,5 +44,5 @@ jenkins config:
     - group: root
     - mode: 400
     - require:
-      - pkg: jenkins
+      - pkg: jenkins_install
 {% endif %}
