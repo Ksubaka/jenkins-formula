@@ -22,11 +22,10 @@ jenkins_install:
   pkg.installed:
     - pkgs: {{ jenkins.pkgs|json }}
   service.running:
+    - name: jenkins
     - enable: True
     - watch:
-      {% if grains['os_family'] in ['RedHat', 'Debian'] %}
       - file: jenkins_config
-      {% endif %}
 
 {% if grains['os_family'] in ['RedHat', 'Debian'] %}
 jenkins_config:
