@@ -1,28 +1,28 @@
 {% from "jenkins/map.jinja" import jenkins with context %}
 
-jenkins_group:
-  group.present:
-    - name: {{ jenkins.group }}
-    - system: True
+# jenkins_group:
+#   group.present:
+#     - name: {{ jenkins.group }}
+#     - system: True
 
-jenkins_user:
-  file.directory:
-    - name: {{ jenkins.home }}
-    - user: {{ jenkins.user }}
-    - group: {{ jenkins.group }}
-    - mode: 0755
-    - require:
-      - user: jenkins_user
-      - group: jenkins_group
-  user.present:
-    - name: {{ jenkins.user }}
-    - groups:
-      - {{ jenkins.group }}
-    - system: True
-    - home: {{ jenkins.home }}
-    - shell: /bin/bash
-    - require:
-      - group: jenkins_group
+# jenkins_user:
+#   file.directory:
+#     - name: {{ jenkins.home }}
+#     - user: {{ jenkins.user }}
+#     - group: {{ jenkins.group }}
+#     - mode: 0755
+#     - require:
+#       - user: jenkins_user
+#       - group: jenkins_group
+#   user.present:
+#     - name: {{ jenkins.user }}
+#     - groups:
+#       - {{ jenkins.group }}
+#     - system: True
+#     - home: {{ jenkins.home }}
+#     - shell: /bin/bash
+#     - require:
+#       - group: jenkins_group
 
 jenkins:
   {% if grains['os_family'] in ['RedHat', 'Debian'] %}
